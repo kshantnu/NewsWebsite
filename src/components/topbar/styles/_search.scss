@@ -1,0 +1,10 @@
+.search {
+  flex: 0 0 135px;
+  border-left: 1px solid;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  .fa-search:before {
+    content: '\f002';
+  }
+}

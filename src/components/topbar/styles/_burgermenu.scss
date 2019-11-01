@@ -1,0 +1,30 @@
+.burgermenu {
+  flex: 0 0 135px;
+  border-right: 1px solid;
+  .burgermenu__icon {
+    background: #000;
+    display: inline-block;
+    height: 2px;
+    position: relative;
+    width: 25px;
+    &:before {
+      position: absolute;
+      top: -6px;
+      background: black;
+      content: '';
+      width: 18px;
+      height: 2px;
+    }
+    &:after {
+      position: absolute;
+      top: -12px;
+      background: black;
+      content: '';
+      width: 9px;
+      height: 2px;
+    }
+  }
+  .burgermenu__text {
+    padding-left: 10px;
+  }
+}

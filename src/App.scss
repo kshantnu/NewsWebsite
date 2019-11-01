@@ -1,0 +1,32 @@
+@import '../src/components/topbar/styles/index';
+
+.App {
+  outline: none;
+  height: 100vh;
+  a:hover {
+    color: #fd7e14;
+  }
+}
+
+.header__barcontainer {
+  margin-left: -0.9375rem;
+  margin-right: -0.9375rem;
+  overflow: hidden;
+  min-height: 38px;
+  line-height: 38px;
+
+  .header__topbar {
+    // imported from mixin
+    @include headerbar;
+  }
+
+  .header__bottombar {
+    // imported from mixin
+    @include headerbar;
+    outline: none;
+    .header__groupedsearch {
+      display: inherit;
+      flex: 1 0 auto;
+    }
+  }
+}

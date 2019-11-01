@@ -1,0 +1,20 @@
+.App__wrapper--transition {
+  transform: translate3d(83px, 0px, 0px) !important;
+  transition-property: all;
+  transition-duration: 0.5s;
+  transition-timing-function: ease;
+  transition-delay: 0s;
+}
+.bm-menu-wrap {
+  position: fixed;
+  right: inherit;
+  z-index: 1100;
+  width: 350px;
+  height: 100vh;
+  transition: all 0.5s ease 0s;
+  border-right: 1px solid;
+}
+
+.bm-menu {
+  padding: 20px;
+}
