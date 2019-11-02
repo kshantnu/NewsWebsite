@@ -1,5 +1,6 @@
 import React from 'react';
 import { push as Menu } from 'react-burger-menu';
+import { Advertisment, MenuItems, TrendingArticle } from './sections';
 
 interface IProps {
   pageWrapId: string;

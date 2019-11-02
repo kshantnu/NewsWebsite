@@ -10,7 +10,7 @@
     line-height: 1;
     font-size: 78px;
     margin: 0 0 10px;
-    @media (max-width: $break-small) {
+    @media (max-width: 480px) {
       font-size: 40px;
     }
     a {

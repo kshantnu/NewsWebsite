@@ -9,8 +9,12 @@ import {
   Title,
   SearchInput
 } from './components/topbar';
+import Navbar from './components/navbar/Navbar';
 
 import SideBar from './components/sidebar/SideBarContainer';
+
+import MainNews from './components/content/mainnews/mainnews';
+import useFetchData from './customhooks/useFetchData';
 
 const App: React.FC = () => {
   const [isSearchContainerVisible, toogleSearchContainer] = useState<boolean>(
@@ -18,6 +22,8 @@ const App: React.FC = () => {
   );
   const [searchNewsText, updateNewsText] = useState<string>('');
   const [burgerMenuState, toggleBurgerMenu] = useState<boolean>(false);
+
+  const { newsData, isLoading } = useFetchData({ category: '' });
 
   const onSearchClickHandler = () => {
     toogleSearchContainer(!isSearchContainerVisible);
@@ -32,6 +38,8 @@ const App: React.FC = () => {
     toggleBurgerMenu(!burgerMenuState);
   };
 
+  console.log('isloading', isLoading);
+
   return (
     <div
       id="App"
@@ -44,49 +52,73 @@ const App: React.FC = () => {
         outerContainerId={'App'}
         isMenuOpen={burgerMenuState}
       />
-      <header
+      <div
         id="App__wrapper"
         className={burgerMenuState ? `App__wrapper--transition` : ''}
       >
-        <div className="container-fluid">
-          <div className="container">
-            <div className="header__barcontainer">
+        <header>
+          <div className="container-fluid">
+            <div className="container">
+              <div className="header__barcontainer">
+                <div className="row">
+                  <div className="col-sm-12 col-md-6 col-lg-6 header__topbar">
+                    <BurgerMenu onIconClickHandler={onIconClickHandler} />
+                    <Time />
+                  </div>
+                  <div className="col-sm-12 col-md-6 col-lg-6 header__bottombar">
+                    {!isSearchContainerVisible ? (
+                      <>
+                        <Social />
+                        <Search onSearchClickHandler={onSearchClickHandler} />
+                      </>
+                    ) : (
+                      <div className="search__inputContainer">
+                        <SearchInput
+                          text={searchNewsText}
+                          onChangeHandler={(textInput: string) =>
+                            updateNewsText(textInput)
+                          }
+                        />
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="container-fluid">
+            <div className="container">
               <div className="row">
-                <div className="col-sm-12 col-md-6 col-lg-6 header__topbar">
-                  <BurgerMenu onIconClickHandler={onIconClickHandler} />
-                  <Time />
-                </div>
-                <div className="col-sm-12 col-md-6 col-lg-6 header__bottombar">
-                  {!isSearchContainerVisible ? (
-                    <>
-                      <Social />
-                      <Search onSearchClickHandler={onSearchClickHandler} />
-                    </>
-                  ) : (
-                    <div className="search__inputContainer">
-                      <SearchInput
-                        text={searchNewsText}
-                        onChangeHandler={(textInput: string) =>
-                          updateNewsText(textInput)
-                        }
-                      />
-                    </div>
-                  )}
+                <div className="col-lg-12 col-sm-12 col-md-12 header__title">
+                  <Title />
                 </div>
               </div>
             </div>
           </div>
-        </div>
-        <div className="container-fluid">
-          <div className="container">
-            <div className="row">
-              <div className="col-lg-12 col-sm-12 col-md-12 header__title">
-                <Title />
+        </header>
+        <nav>
+          <div className="container-fluid">
+            <div className="container">
+              <div className="row">
+                <Navbar></Navbar>
               </div>
             </div>
           </div>
-        </div>
-      </header>
+        </nav>
+
+        {!isLoading ? (
+          <div className="container-fluid">
+            <div className="container">
+              <div className="row">
+                <section>
+                  <MainNews newsData={newsData} />
+                </section>
+                <aside></aside>
+              </div>
+            </div>
+          </div>
+        ) : null}
+      </div>
     </div>
   );
 };
