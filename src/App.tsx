@@ -110,10 +110,12 @@ const App: React.FC = () => {
           <div className="container-fluid">
             <div className="container">
               <div className="row">
-                <section>
+                <section className="col-lg-8 col-md-8 col-sm-12">
                   <MainNews newsData={newsData} />
                 </section>
-                <aside></aside>
+                <aside className="col-lg-4 col-md-4 col-sm-12">
+                  <div>sadas</div>
+                </aside>
               </div>
             </div>
           </div>

@@ -23,34 +23,32 @@ const MainNews = (props: IProps): JSX.Element => {
 
   return (
     <div className="mainnews__container">
-      <div className="col-lg-8 col-md-8 col-sm-12">
-        {!topNews ? null : (
-          <figure>
-            <img
-              src={topNews.urlToImage}
-              className="mainnews__image"
-              alt="main news"
-            />
-            <figcaption>
-              <p className="meta">
-                <span>{topNews.publishedAt}</span>
-                <span>{topNews.source.name}</span>
-              </p>
-              <p>
-                <h3>
-                  <a
-                    className="mainnews__title"
-                    target="_blank"
-                    href={topNews.url}
-                  >
-                    {topNews.title}
-                  </a>
-                </h3>
-              </p>
-            </figcaption>
-          </figure>
-        )}
-      </div>
+      {!topNews ? null : (
+        <figure>
+          <img
+            src={topNews.urlToImage}
+            className="mainnews__image"
+            alt="main news"
+          />
+          <figcaption>
+            <p className="meta">
+              <span>{topNews.publishedAt}</span>
+              <span>{topNews.source.name}</span>
+            </p>
+            <p>
+              <h3>
+                <a
+                  className="mainnews__title"
+                  target="_blank"
+                  href={topNews.url}
+                >
+                  {topNews.title}
+                </a>
+              </h3>
+            </p>
+          </figcaption>
+        </figure>
+      )}
     </div>
   );
 };
