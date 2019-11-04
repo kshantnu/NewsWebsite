@@ -3,7 +3,7 @@ import './App.scss';
 import './components/sidebar/styles/sidebar.scss';
 import {
   BurgerMenu,
-  Search,
+  SelectCountry,
   Social,
   Time,
   Title,
@@ -54,28 +54,12 @@ const App: React.FC = () => {
   // };
   //const isLoading = false;
 
-  const onSearchClickHandler = () => {
-    toogleSearchContainer(!isSearchContainerVisible);
-  };
-
-  const onSearchBlurHandler = (e: React.MouseEvent) => {
-    if (!isSearchContainerVisible) return;
-    toogleSearchContainer(!isSearchContainerVisible);
-  };
-
   const onIconClickHandler = () => {
     toggleBurgerMenu(!burgerMenuState);
   };
 
-  console.log('isloading', isLoading);
-
   return (
-    <div
-      id="App"
-      className="App"
-      tabIndex={0}
-      onClick={e => onSearchBlurHandler(e)}
-    >
+    <div id="App" className="App">
       <SideBar
         pageWrapId={'App__wrapper'}
         outerContainerId={'App'}
@@ -98,7 +82,7 @@ const App: React.FC = () => {
                     {!isSearchContainerVisible ? (
                       <>
                         <Social />
-                        <Search onSearchClickHandler={onSearchClickHandler} />
+                        <SelectCountry />
                       </>
                     ) : (
                       <div className="search__inputContainer">

@@ -1,10 +1,6 @@
 import React, { useState } from 'react';
 
-interface IProps {
-  onSearchClickHandler: () => void;
-}
-
-const Search = (props: IProps): JSX.Element => {
+const SelectCountry = (): JSX.Element => {
   return (
     <div className="news__country">
       <select className="news__selectcountry">
@@ -19,4 +15,4 @@ const Search = (props: IProps): JSX.Element => {
   );
 };
 
-export default React.memo(Search);
+export default React.memo(SelectCountry);
