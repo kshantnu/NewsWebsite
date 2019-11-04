@@ -12,7 +12,7 @@ const FetchData = (config: interfaces.IConfig) => {
     async function getNews() {
       setIsLoading(true);
       const response = axios.get(
-        'https://newsapi.org/v2/top-headlines?country=in&apiKey=23cf15c0bd33473c8c2603b86dffe299'
+        'https://newsapi.org/v2/top-headlines?country=in&apiKey={REPLACE WITH YOUR API_KEY}'
       );
 
       try {
