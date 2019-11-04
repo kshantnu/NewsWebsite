@@ -36,7 +36,7 @@ export interface IResponse {
   status: string;
   totalResults: number;
   articles: Array<IArticleResponse>;
-  sources: Array<IArticleResponse>;
+  sources?: Array<IArticleResponse>;
 }
 
 // export interface ISourcesResponse {

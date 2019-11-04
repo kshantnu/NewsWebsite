@@ -6,27 +6,43 @@
   a:hover {
     color: #fd7e14;
   }
-}
 
-.header__barcontainer {
-  margin-left: -0.9375rem;
-  margin-right: -0.9375rem;
-  overflow: hidden;
-  min-height: 38px;
-  line-height: 38px;
+  .header__barcontainer {
+    margin-left: -0.9375rem;
+    margin-right: -0.9375rem;
+    overflow: hidden;
+    min-height: 38px;
+    line-height: 38px;
 
-  .header__topbar {
-    // imported from mixin
-    @include headerbar;
+    .header__topbar {
+      // imported from mixin
+      @include headerbar;
+    }
+
+    .header__bottombar {
+      // imported from mixin
+      @include headerbar;
+      outline: none;
+      .header__groupedsearch {
+        display: inherit;
+        flex: 1 0 auto;
+      }
+    }
   }
 
-  .header__bottombar {
-    // imported from mixin
-    @include headerbar;
-    outline: none;
-    .header__groupedsearch {
-      display: inherit;
-      flex: 1 0 auto;
+  .news__content__sidebar {
+    margin-top: 6px;
+    padding-right: 0px;
+    height: 100vh;
+    position: relative;
+    &:after {
+      background: #eee none repeat scroll 0 0;
+      content: '';
+      height: 100%;
+      left: 0;
+      position: absolute;
+      top: 0;
+      width: 1px;
     }
   }
 }

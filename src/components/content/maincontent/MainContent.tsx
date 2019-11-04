@@ -2,6 +2,7 @@ import React from 'react';
 import * as interfaces from '../../../customhooks/model';
 
 import './mainnews.scss';
+// import img from '../../../assets/patern-1.png';
 
 interface IProps {
   newsData: interfaces.IResponse | null;
@@ -16,8 +17,8 @@ const MainNews = (props: IProps): JSX.Element => {
     for (let i = 0; i < props.newsData.articles.length; i++) {
       if (props.newsData.articles[i].urlToImage) {
         topNews = props.newsData.articles[i];
+        break;
       }
-      break;
     }
   }
 
@@ -30,7 +31,7 @@ const MainNews = (props: IProps): JSX.Element => {
             className="mainnews__image"
             alt="main news"
           />
-          <figcaption>
+          <figcaption className="mainnews__imageMetaContainer">
             <p className="meta">
               <span>{topNews.publishedAt}</span>
               <span>{topNews.source.name}</span>

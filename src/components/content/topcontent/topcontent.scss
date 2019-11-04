@@ -1,0 +1,20 @@
+.news__favourites {
+  display: flex;
+  .news__selectfavourites {
+    border: 1px solid firebrick;
+    width: 30%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .news__favouriteitems {
+    border: 1px solid red;
+    width: 70%;
+    .abc {
+      display: inline-block;
+      padding: 10px;
+      margin: 10px;
+      border: 1px solid;
+    }
+  }
+}
