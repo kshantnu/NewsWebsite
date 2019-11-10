@@ -1,61 +1,93 @@
-import React, { useState } from 'react';
+import React, { useReducer } from 'react';
 import './App.scss';
 import './components/sidebar/styles/sidebar.scss';
+import AppReducer from '../src/store/appReducer';
+import { appInitialState } from '../src/store/initialState';
+
 import {
   BurgerMenu,
   SelectCountry,
   Social,
   Time,
-  Title,
-  SearchInput
+  Title
 } from './components/topbar';
+
 import Navbar from './components/navbar/Navbar';
 
 import SideBar from './components/sidebar/SideBarContainer';
 
 import MainNews from './components/content/maincontent/MainContent';
 import NewsItems from './components/content/sidecontent/NewsItems';
-import TopContent from './components/content/topcontent/TopContent';
+
 import useFetchData from './customhooks/useFetchData';
-import { mock } from './customhooks/mockJson';
-import { IResponse } from './customhooks/model';
+
+enum newsCategory {
+  topHeadlines = 'topHeadlines',
+  everything = 'everything',
+  sources = 'sources'
+}
+
+enum APIEndpoints {
+  topHeadlines = 'https://newsapi.org/v2/top-headlines',
+  everything = 'https://newsapi.org/v2/everything',
+  sources = 'https://newsapi.org/v2/sources'
+}
 
 const App: React.FC = () => {
-  const [isSearchContainerVisible, toogleSearchContainer] = useState<boolean>(
-    false
-  );
-  const [searchNewsText, updateNewsText] = useState<string>('');
-  const [burgerMenuState, toggleBurgerMenu] = useState<boolean>(false);
+  const [state, dispatch] = useReducer(AppReducer, appInitialState);
+  const {
+    burgerMenuState,
+    newsData,
+    isLoading,
+    apiError,
+    mainNews,
+    totalArticles,
+    pageNumber,
+    pageSize,
+    countryCode
+  } = state;
 
-  const { newsData, isLoading } = useFetchData({ category: '' });
-  // const newsData = {
-  //   status: 'ok',
-  //   totalResults: 38,
-  //   articles: [
-  //     {
-  //       source: {
-  //         id: 1,
-  //         name: 'Ndtv.com'
-  //       },
-  //       author: 'ghgg',
-  //       title:
-  //         'Delhi Trapped In Smog, Flights Delayed; Noida Schools Shut Till Tuesday - NDTV News',
-  //       description:
-  //         'The air pollution levels in Delhi made a huge jump this morning, going deeper into the "emergency" zone. From yesterday\'s 407, the Air Quality Index or AQI rose to 625, reducing visibility significantly and hampering air and road traffic in the city. The situ…',
-  //       url:
-  //         'https://www.ndtv.com/delhi-news/delhi-pollution-ncr-still-trapped-in-toxic-smog-odd-even-rule-from-tomorrow-2126498',
-  //       urlToImage:
-  //         'https://c.ndtvimg.com/2019-11/aeh7pu18_delhi-pollution-_625x300_03_November_19.jpg',
-  //       publishedAt: '2019-11-03T07:11:00Z',
-  //       content:
-  //         'Delhi is expected to begin its odd-even road rationing scheme from tomorrow.New Delhi: The air pollution levels in Delhi made a huge jump this morning, going deeper into the "emergency" zone. From yesterday\'s 407, the Air Quality Index or AQI rose to 625, red… [+3343 chars]'
-  //     }
-  //   ]
-  // };
-  //const isLoading = false;
+  // TODO: use error flag to show error view
+
+  useFetchData(
+    `${APIEndpoints.topHeadlines}?country=${countryCode}&pagesize=${pageSize}&page=${pageNumber}`,
+    dispatch,
+    state
+  );
 
   const onIconClickHandler = () => {
-    toggleBurgerMenu(!burgerMenuState);
+    dispatch({
+      type: 'TOGGLE_BURGERMENU',
+      payload: { burgerMenuState: !burgerMenuState }
+    });
+  };
+
+  const OnCountryChangeHandler = (
+    e: React.ChangeEvent<HTMLSelectElement>
+  ): void => {
+    const selectedCountry = e.target.value;
+    dispatch({
+      type: 'UPDATE_COUNTRY',
+      payload: { countryCode: selectedCountry }
+    });
+  };
+
+  const loadPreviousNews = () => {
+    dispatch({
+      type: 'UPDATE_PAGENUMBER',
+      payload: {
+        pageNumber: pageNumber - 1
+      }
+    });
+  };
+
+  const loadNextNews = () => {
+    dispatch({
+      type: 'UPDATE_PAGESIZE',
+      payload: {
+        pageNumber: pageNumber + 1
+      }
+    });
   };
 
   return (
@@ -79,21 +111,13 @@ const App: React.FC = () => {
                     <Time />
                   </div>
                   <div className="col-sm-12 col-md-6 col-lg-6 header__bottombar">
-                    {!isSearchContainerVisible ? (
-                      <>
-                        <Social />
-                        <SelectCountry />
-                      </>
-                    ) : (
-                      <div className="search__inputContainer">
-                        <SearchInput
-                          text={searchNewsText}
-                          onChangeHandler={(textInput: string) =>
-                            updateNewsText(textInput)
-                          }
-                        />
-                      </div>
-                    )}
+                    <>
+                      <Social />
+                      <SelectCountry
+                        onCountryChangeHandler={OnCountryChangeHandler}
+                        value={countryCode}
+                      />
+                    </>
                   </div>
                 </div>
               </div>
@@ -119,15 +143,21 @@ const App: React.FC = () => {
           </div>
         </nav>
 
-        {!isLoading ? (
+        {!isLoading && !apiError ? (
           <div className="container-fluid">
             <div className="container">
               <div className="row">
                 <section className="col-lg-7 col-md-7 col-sm-12">
-                  <MainNews newsData={newsData} />
+                  <MainNews mainNews={mainNews} />
                 </section>
                 <aside className="col-lg-5 col-md-5 col-sm-12 news__content__sidebar">
-                  <NewsItems newsData={newsData} />
+                  <NewsItems
+                    loadPreviousNews={loadPreviousNews}
+                    loadNextNews={loadNextNews}
+                    pageSize={pageSize}
+                    pageNumber={pageNumber}
+                    totalArticles={totalArticles}
+                  />
                 </aside>
               </div>
             </div>

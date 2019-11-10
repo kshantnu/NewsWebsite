@@ -1,15 +1,23 @@
 import React, { useState } from 'react';
 
-const SelectCountry = (): JSX.Element => {
+interface IProps {
+  onCountryChangeHandler: (value: React.ChangeEvent<HTMLSelectElement>) => void;
+  value: string;
+}
+
+const SelectCountry = (props: IProps): JSX.Element => {
   return (
     <div className="news__country">
-      <select className="news__selectcountry">
-        <option value="World" selected>
-          World
+      <select
+        className="news__selectcountry"
+        value={props.value}
+        onChange={e => props.onCountryChangeHandler(e)}
+      >
+        <option value="in" selected>
+          India
         </option>
-        <option value="India">India</option>
-        <option value="United States">United States</option>
-        <option value="United Kingdom">United Kingdom</option>
+        <option value="us">United States</option>
+        <option value="gb">United Kingdom</option>
       </select>
     </div>
   );

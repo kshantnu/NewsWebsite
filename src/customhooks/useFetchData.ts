@@ -1,35 +1,40 @@
-import React, { useState, useEffect } from 'react';
-import axios, { AxiosPromise } from 'axios';
+import React, { useEffect } from 'react';
 
-import * as interfaces from './model';
+import axios from 'axios';
 
-const FetchData = (config: interfaces.IConfig) => {
-  const [newsData, setNewsData] = useState(null);
-
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+const FetchData = (url: string, dispatch: any, state: any) => {
+  const { isLoading, newsData, urlconfig } = state;
 
   useEffect(() => {
     async function getNews() {
-      setIsLoading(true);
+      dispatch({
+        type: 'UPDATE_LOADINGFLAG',
+        payload: { isLoading: !isLoading }
+      });
+
       const response = axios.get(
-        'https://newsapi.org/v2/top-headlines?country=in&apiKey={REPLACE WITH YOUR API_KEY}'
+        `${url}&apiKey=23cf15c0bd33473c8c2603b86dffe299`
       );
 
       try {
         const resolvedResponse = await response;
 
-        setIsLoading(false);
-        setNewsData(resolvedResponse.data);
+        dispatch({
+          type: 'UPDATE_LOADINGFLAG',
+          payload: { isLoading: !isLoading }
+        });
+
+        dispatch({
+          type: 'ADD_NEWS',
+          payload: { newsData: resolvedResponse.data }
+        });
       } catch (error) {
-        // Stop the code execution and throw the error.
-        throw new Error(error);
+        dispatch({ type: 'UPDATE_APIERROR', payload: { apiError: error } });
       }
     }
 
     getNews();
-  }, []);
-
-  return { newsData, isLoading };
+  }, [url]);
 };
 
 export default FetchData;

@@ -13,6 +13,7 @@ export interface IConfig {
   apiKey?: string;
   country?: string;
   category?: string;
+  url: string;
 }
 
 // export interface IConfigTopHeadlines {
