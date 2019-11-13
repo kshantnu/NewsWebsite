@@ -1,7 +1,9 @@
 import React from 'react';
 import NewsItem from './NewsItem';
-import Pagination from '../../Pagination/Pagination';
+// import Pagination from '../../Pagination/Pagination';
 import * as interfaces from '../../../customhooks/model';
+
+const Pagination = React.lazy(() => import('../../Pagination/Pagination'));
 
 interface IProps {
   totalArticles: Array<interfaces.IArticleResponse>;
@@ -19,14 +21,12 @@ const NewsItems = (props: IProps): JSX.Element => {
     pageNumber,
     pageSize
   } = props;
-  console.log('startIndex', (pageNumber - 1) * props.pageSize);
-  console.log('lastIndedx', pageSize);
+
   const pageWiseArticles = totalArticles.slice(
     (pageNumber - 1) * props.pageSize,
     (pageNumber - 1) * props.pageSize + pageSize
   );
-  console.log('pageWiseArticles', pageWiseArticles);
-  console.log('totalArticles', totalArticles);
+
   return (
     <>
       {!pageWiseArticles ? null : (
@@ -36,14 +36,16 @@ const NewsItems = (props: IProps): JSX.Element => {
               <span>Top Headlines</span>
             </h4>
           </div>
-          {pageWiseArticles.map(item => (
-            <NewsItem item={item} />
+          {pageWiseArticles.map((item, index) => (
+            <NewsItem item={item} key={index} />
           ))}
 
-          <Pagination
-            loadPreviousNews={loadPreviousNews}
-            loadNextNews={loadNextNews}
-          />
+          <React.Suspense fallback={<></>}>
+            <Pagination
+              loadPreviousNews={loadPreviousNews}
+              loadNextNews={loadNextNews}
+            />
+          </React.Suspense>
         </>
       )}
     </>

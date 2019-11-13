@@ -1,4 +1,4 @@
-import React, { useReducer } from 'react';
+import React, { useReducer, useCallback, useRef } from 'react';
 import './App.scss';
 import './components/sidebar/styles/sidebar.scss';
 import AppReducer from '../src/store/appReducer';
@@ -14,18 +14,12 @@ import {
 
 import Navbar from './components/navbar/Navbar';
 
-import SideBar from './components/sidebar/SideBarContainer';
+// import SideBar from './components/sidebar/SideBarContainer';
 
 import MainNews from './components/content/maincontent/MainContent';
 import NewsItems from './components/content/sidecontent/NewsItems';
 
 import useFetchData from './customhooks/useFetchData';
-
-enum newsCategory {
-  topHeadlines = 'topHeadlines',
-  everything = 'everything',
-  sources = 'sources'
-}
 
 enum APIEndpoints {
   topHeadlines = 'https://newsapi.org/v2/top-headlines',
@@ -33,34 +27,47 @@ enum APIEndpoints {
   sources = 'https://newsapi.org/v2/sources'
 }
 
+const SideBar = React.lazy(() =>
+  import('./components/sidebar/SideBarContainer')
+);
+
 const App: React.FC = () => {
   const [state, dispatch] = useReducer(AppReducer, appInitialState);
+
   const {
     burgerMenuState,
-    newsData,
     isLoading,
     apiError,
     mainNews,
     totalArticles,
     pageNumber,
     pageSize,
-    countryCode
+    countryCode,
+    category,
+    newsTypes
   } = state;
 
   // TODO: use error flag to show error view
 
-  useFetchData(
-    `${APIEndpoints.topHeadlines}?country=${countryCode}&pagesize=${pageSize}&page=${pageNumber}`,
-    dispatch,
-    state
-  );
+  let url;
+  if (newsTypes === 'topHeadlines') {
+    let baseUrl = APIEndpoints.topHeadlines;
+    if (countryCode) {
+      url = `${baseUrl}?country=${countryCode}&pagesize=${pageSize}&page=${pageNumber}`;
+    }
+    if (category) {
+      url = `${baseUrl}?category=${category}&country=${countryCode}&pagesize=${pageSize}&page=${pageNumber}`;
+    }
+  }
 
-  const onIconClickHandler = () => {
+  useFetchData(url, dispatch, state);
+
+  const onIconClickHandler = useCallback(() => {
     dispatch({
       type: 'TOGGLE_BURGERMENU',
       payload: { burgerMenuState: !burgerMenuState }
     });
-  };
+  }, [burgerMenuState]);
 
   const OnCountryChangeHandler = (
     e: React.ChangeEvent<HTMLSelectElement>
@@ -71,6 +78,18 @@ const App: React.FC = () => {
       payload: { countryCode: selectedCountry }
     });
   };
+
+  const categoryChangeHandler = useCallback(
+    (e: React.MouseEvent<HTMLDivElement>, category: string) => {
+      dispatch({
+        type: 'UPDATE_CATEGORY',
+        payload: {
+          category
+        }
+      });
+    },
+    []
+  );
 
   const loadPreviousNews = () => {
     dispatch({
@@ -92,11 +111,14 @@ const App: React.FC = () => {
 
   return (
     <div id="App" className="App">
-      <SideBar
-        pageWrapId={'App__wrapper'}
-        outerContainerId={'App'}
-        isMenuOpen={burgerMenuState}
-      />
+      <React.Suspense fallback={<></>}>
+        <SideBar
+          pageWrapId={'App__wrapper'}
+          outerContainerId={'App'}
+          isMenuOpen={burgerMenuState}
+        />
+      </React.Suspense>
+
       <div
         id="App__wrapper"
         className={burgerMenuState ? `App__wrapper--transition` : ''}
@@ -137,7 +159,10 @@ const App: React.FC = () => {
           <div className="container-fluid">
             <div className="container">
               <div className="row">
-                <Navbar></Navbar>
+                <Navbar
+                  categoryChangeHandler={categoryChangeHandler}
+                  category={category}
+                ></Navbar>
               </div>
             </div>
           </div>
@@ -148,9 +173,18 @@ const App: React.FC = () => {
             <div className="container">
               <div className="row">
                 <section className="col-lg-7 col-md-7 col-sm-12">
-                  <MainNews mainNews={mainNews} />
+                  <MainNews mainNews={mainNews} totalArticles={totalArticles} />
                 </section>
                 <aside className="col-lg-5 col-md-5 col-sm-12 news__content__sidebar">
+                  <NewsItems
+                    loadPreviousNews={loadPreviousNews}
+                    loadNextNews={loadNextNews}
+                    pageSize={pageSize}
+                    pageNumber={pageNumber}
+                    totalArticles={totalArticles}
+                  />
+                  <br />
+                  <br />
                   <NewsItems
                     loadPreviousNews={loadPreviousNews}
                     loadNextNews={loadNextNews}

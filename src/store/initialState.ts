@@ -1,16 +1,21 @@
+enum newsTypes {
+  topHeadlines = 'topHeadlines',
+  everything = 'everything',
+  sources = 'sources'
+}
+
 export const appInitialState = {
-  newsData: null,
+  topHeadlinesNews: null,
+  everythingSportsNews: null,
+  sourcesNews: null,
   mainNews: null,
   totalArticles: [],
-  // urlconfig: {
-  //   pageNumber: 1,
-  //   pageSize: 8,
-  //   countryCode: 'in'
-  // },
   burgerMenuState: false,
   isLoading: false,
   apiError: null,
   pageNumber: 1,
   pageSize: 8,
-  countryCode: 'in'
+  countryCode: 'in',
+  category: 'General',
+  newsTypes: newsTypes.topHeadlines
 };

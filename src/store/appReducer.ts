@@ -1,5 +1,6 @@
 import {
-  ADD_NEWS,
+  ADD_TOPHEADLINES,
+  ADD_EVERYTHING_SPORTSNEWS,
   UPDATE_URLCONFIG,
   TOGGLE_BURGERMENU,
   UPDATE_LOADINGFLAG,
@@ -8,21 +9,24 @@ import {
   RESET_NEWS,
   UPDATE_COUNTRY,
   UPDATE_PAGENUMBER,
-  UPDATE_PAGESIZE
+  UPDATE_PAGESIZE,
+  UPDATE_CATEGORY
 } from './actionTypes';
 
 const AppReducer = (state: any, action: any) => {
   switch (action.type) {
-    case ADD_NEWS: {
+    case ADD_TOPHEADLINES: {
       const {
-        payload: { newsData }
+        payload: { topHeadlinesNews }
       } = action;
       let mainNews;
-
-      if (newsData && newsData.totalResults > 0) {
+      if (topHeadlinesNews && topHeadlinesNews.totalResults > 0) {
         // had to use for loop because need to break out from loop;
         // only pic the news as main news if it has image url.
-        const totalArticles = [...state.totalArticles, ...newsData.articles];
+        const totalArticles = [
+          ...state.totalArticles,
+          ...topHeadlinesNews.articles
+        ];
         for (let i = 0; i < totalArticles.length; i++) {
           if (totalArticles[i].urlToImage) {
             mainNews = totalArticles[i];
@@ -30,15 +34,17 @@ const AppReducer = (state: any, action: any) => {
           }
         }
       }
-      console.log('state', state.totalArticles);
-      console.log('new', newsData.articles);
-      console.log('upfdated', [...state.totalArticles, ...newsData.articles]);
-
       return {
         ...state,
         ...action.payload,
         mainNews,
-        totalArticles: [...state.totalArticles, ...newsData.articles]
+        totalArticles: [...state.totalArticles, ...topHeadlinesNews.articles]
+      };
+    }
+    case ADD_EVERYTHING_SPORTSNEWS: {
+      return {
+        ...state,
+        ...action.payload
       };
     }
     case UPDATE_URLCONFIG: {
@@ -81,6 +87,16 @@ const AppReducer = (state: any, action: any) => {
       };
     }
     case UPDATE_COUNTRY: {
+      return {
+        ...state,
+        ...action.payload,
+        newsData: null,
+        mainNews: null,
+        totalArticles: [],
+        pageNumber: 1
+      };
+    }
+    case UPDATE_CATEGORY: {
       return {
         ...state,
         ...action.payload,
