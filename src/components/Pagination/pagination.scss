@@ -9,12 +9,17 @@
   padding-top: 2%;
   padding-bottom: 2%;
   margin-top: 6%;
+  border: 1px solid black;
 
   .pagination__nexttag {
     cursor: pointer;
-    &:hover {
-      color: orange;
-    }
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 16px;
+    color: orange;
+    // &:hover {
+    //   color: orange;
+    // }
     &:after {
       background: rgba(0, 0, 0, 0) url(../../assets/next.png) repeat scroll 0 0;
       content: '';
@@ -28,10 +33,13 @@
   }
   .pagination__previoustag {
     cursor: pointer;
-    &:hover {
-      color: orange;
-      left: 0%;
-    }
+    font-weight: bold;
+    font-size: 16px;
+    color: orange;
+    // &:hover {
+    //   color: orange;
+    //   left: 0%;
+    // }
     &:before {
       background: rgba(0, 0, 0, 0) url(../../assets/previous.png) repeat scroll
         0 0;

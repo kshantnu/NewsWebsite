@@ -1,30 +1,33 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import NewsItem from './NewsItem';
+
 // import Pagination from '../../Pagination/Pagination';
-import * as interfaces from '../../../customhooks/model';
+import * as interfaces from '../../../interfaces';
 
 const Pagination = React.lazy(() => import('../../Pagination/Pagination'));
 
 interface IProps {
-  totalArticles: Array<interfaces.IArticleResponse>;
+  topHeadLinesArticles: Array<interfaces.IArticleResponse>;
   pageSize: number;
-  pageNumber: number;
-  loadPreviousNews: () => void;
-  loadNextNews: () => void;
+  headlinesPageNumber: number;
+  loadPreviousHeadlines: () => void;
+  loadNextHeadlines: () => void;
+  heading: string;
 }
 
 const NewsItems = (props: IProps): JSX.Element => {
   const {
-    totalArticles,
-    loadPreviousNews,
-    loadNextNews,
-    pageNumber,
-    pageSize
+    topHeadLinesArticles,
+    loadPreviousHeadlines,
+    loadNextHeadlines,
+    headlinesPageNumber,
+    pageSize,
+    heading
   } = props;
 
-  const pageWiseArticles = totalArticles.slice(
-    (pageNumber - 1) * props.pageSize,
-    (pageNumber - 1) * props.pageSize + pageSize
+  const pageWiseArticles = topHeadLinesArticles.slice(
+    (headlinesPageNumber - 1) * pageSize,
+    (headlinesPageNumber - 1) * pageSize + pageSize
   );
 
   return (
@@ -33,7 +36,7 @@ const NewsItems = (props: IProps): JSX.Element => {
         <>
           <div className="news_latestarticles">
             <h4 className="news_latestarticles__text">
-              <span>Top Headlines</span>
+              <span>{heading}</span>
             </h4>
           </div>
           {pageWiseArticles.map((item, index) => (
@@ -42,8 +45,8 @@ const NewsItems = (props: IProps): JSX.Element => {
 
           <React.Suspense fallback={<></>}>
             <Pagination
-              loadPreviousNews={loadPreviousNews}
-              loadNextNews={loadNextNews}
+              loadPreviousNews={loadPreviousHeadlines}
+              loadNextNews={loadNextHeadlines}
             />
           </React.Suspense>
         </>

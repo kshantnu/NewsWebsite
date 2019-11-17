@@ -16,40 +16,12 @@ export interface IConfig {
   url: string;
 }
 
-// export interface IConfigTopHeadlines {
-//   country: string;
-//   category: string;
-//   sources: string;
-//   q: string;
-//   pageSize: number;
-//   page: number;
-//   apiKey: string;
-// }
-
-// export interface IConfigSources {
-//   language: string;
-//   category: string;
-//   country: string;
-//   apiKey: string;
-// }
-
 export interface IResponse {
   status: string;
   totalResults: number;
   articles: Array<IArticleResponse>;
   sources?: Array<IArticleResponse>;
 }
-
-// export interface ISourcesResponse {
-//   status: string;
-//   sources: Array<IArticleResponse>;
-// }
-
-// export interface ITopHeadlinesResponse {
-//   status: string;
-//   totalResults: number;
-//   articles: Array<IArticleResponse>;
-// }
 
 export interface ISource {
   id: number;

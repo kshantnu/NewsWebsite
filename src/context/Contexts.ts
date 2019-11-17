@@ -1,4 +1,14 @@
 import React from 'react';
 
-export const ConfigContextProvider = React.createContext({});
-export const NewsDataContextProvider = React.createContext(null);
+import {
+  INewsContextProvider,
+  IAppInitialState,
+  IAction,
+  AppStateContext
+} from '../interfaces';
+
+export const NewsContext = React.createContext<INewsContextProvider | null>(
+  null
+);
+
+export const StateContext = React.createContext<AppStateContext | null>(null);

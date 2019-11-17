@@ -20,26 +20,6 @@ enum Categories {
 }
 
 const Navbar = ({ categoryChangeHandler, category }: IProps): JSX.Element => {
-  // const navContainerRef = useRef<HTMLDivElement>(null);
-  // const [applyStickyNavCss, setApplyStickyNavCss] = useState(false);
-
-  // useLayoutEffect(() => {
-  //   const handleNavScroll = () => {
-  //     const elementTopPosition = navContainerRef.current!.getBoundingClientRect()
-  //       .top;
-  //     console.log('dffdfddfdf', navContainerRef.current!.offsetTop);
-  //     if (elementTopPosition === 0) {
-  //       setApplyStickyNavCss(false);
-  //     } else if (elementTopPosition <= 5) {
-  //       setApplyStickyNavCss(true);
-  //     } else {
-  //       setApplyStickyNavCss(false);
-  //     }
-  //   };
-  //   window.addEventListener('scroll', handleNavScroll);
-  //   return () => window.removeEventListener('scroll', handleNavScroll);
-  // }, []);
-
   return (
     <div className="navbar__container">
       <div

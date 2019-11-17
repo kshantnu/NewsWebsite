@@ -1,16 +1,42 @@
-import React, { useReducer } from 'react';
-import * as interfaces from '../../../customhooks/model';
-import ReadMoreBlocks from './ReadMoreBlocks';
+import React, { useReducer, useContext, useEffect } from 'react';
+
+import useFetchNewsHeadlines from '../../../customhooks/useFetchTopHeadlines';
+import { StateContext } from '../../../context/Contexts';
+// import * as interfaces from '../../../customhooks/model';
 import './mainnews.scss';
 
-interface IProps {
-  mainNews: interfaces.IArticleResponse;
-  totalArticles: Array<interfaces.IArticleResponse>;
-}
+// interface IProps {
+//   mainNews: interfaces.IArticleResponse;
+//   topHeadLinesArticles: Array<interfaces.IArticleResponse>;
+// }
 
-const MainNews = (props: IProps): JSX.Element => {
-  console.log('rerendering');
-  const { mainNews, totalArticles } = props;
+const MainNews = (): JSX.Element => {
+  const { state, dispatch } = useContext(StateContext)!;
+  const {
+    countryCode,
+    pageSize,
+    headlinesPageNumber,
+    category,
+    mainNews
+  } = state;
+
+  let requestObject = {
+    country: countryCode,
+    pagesize: pageSize,
+    headlinesPageNumber,
+    category: category
+  };
+
+  const { isError, isLoading, headlinesData } = useFetchNewsHeadlines(
+    requestObject
+  );
+
+  useEffect(() => {
+    dispatch({
+      type: 'ADD_TOPHEADLINES',
+      payload: { topHeadlinesNews: headlinesData }
+    });
+  }, [headlinesData]);
 
   return (
     <>
@@ -42,32 +68,6 @@ const MainNews = (props: IProps): JSX.Element => {
           </figure>
         )}
       </div>
-      <>
-        {/* {!mainNews ? null : (
-          <>
-            <ReadMoreBlocks
-              heading={'Sports'}
-              articles={totalArticles}
-            ></ReadMoreBlocks>
-            <ReadMoreBlocks
-              heading={'Entertainment'}
-              articles={totalArticles}
-            ></ReadMoreBlocks>
-            <ReadMoreBlocks
-              heading={'Health'}
-              articles={totalArticles}
-            ></ReadMoreBlocks>
-            <ReadMoreBlocks
-              heading={'Technology'}
-              articles={totalArticles}
-            ></ReadMoreBlocks>
-            <ReadMoreBlocks
-              heading={'Science'}
-              articles={totalArticles}
-            ></ReadMoreBlocks>
-          </>
-        )} */}
-      </>
     </>
   );
 };

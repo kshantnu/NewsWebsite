@@ -1,21 +1,16 @@
-enum newsTypes {
-  topHeadlines = 'topHeadlines',
-  everything = 'everything',
-  sources = 'sources'
-}
+import { IAppInitialState } from '../interfaces';
 
-export const appInitialState = {
+export const appInitialState: IAppInitialState = {
   topHeadlinesNews: null,
-  everythingSportsNews: null,
-  sourcesNews: null,
-  mainNews: null,
-  totalArticles: [],
+  trendingNews: null,
+  newsSources: null,
+  mainNews: null, // news as main pic on dashboard
   burgerMenuState: false,
   isLoading: false,
   apiError: null,
-  pageNumber: 1,
+  headlinesPageNumber: 1,
+  trendingNewsPageNumber: 1,
   pageSize: 8,
   countryCode: 'in',
-  category: 'General',
-  newsTypes: newsTypes.topHeadlines
+  category: 'General'
 };

@@ -17,14 +17,19 @@ import Navbar from './components/navbar/Navbar';
 // import SideBar from './components/sidebar/SideBarContainer';
 
 import MainNews from './components/content/maincontent/MainContent';
-import NewsItems from './components/content/sidecontent/NewsItems';
+import { NewsContext, StateContext } from '../src/context/Contexts';
+import HeadlinesNews from './components/content/sidecontent/HeadlinesNews';
 
-import useFetchData from './customhooks/useFetchData';
+// enum APIEndpoints {
+//   topHeadlines = 'https://newsapi.org/v2/top-headlines',
+//   everything = 'https://newsapi.org/v2/everything',
+//   sources = 'https://newsapi.org/v2/sources'
+// }
 
-enum APIEndpoints {
-  topHeadlines = 'https://newsapi.org/v2/top-headlines',
-  everything = 'https://newsapi.org/v2/everything',
-  sources = 'https://newsapi.org/v2/sources'
+enum newsTypes {
+  topHeadlines = 'topHeadlines',
+  everything = 'everything',
+  sources = 'sources'
 }
 
 const SideBar = React.lazy(() =>
@@ -39,28 +44,14 @@ const App: React.FC = () => {
     isLoading,
     apiError,
     mainNews,
-    totalArticles,
-    pageNumber,
+    headlinesPageNumber,
+    trendingNewsPageNumber,
     pageSize,
     countryCode,
-    category,
-    newsTypes
+    category
   } = state;
 
   // TODO: use error flag to show error view
-
-  let url;
-  if (newsTypes === 'topHeadlines') {
-    let baseUrl = APIEndpoints.topHeadlines;
-    if (countryCode) {
-      url = `${baseUrl}?country=${countryCode}&pagesize=${pageSize}&page=${pageNumber}`;
-    }
-    if (category) {
-      url = `${baseUrl}?category=${category}&country=${countryCode}&pagesize=${pageSize}&page=${pageNumber}`;
-    }
-  }
-
-  useFetchData(url, dispatch, state);
 
   const onIconClickHandler = useCallback(() => {
     dispatch({
@@ -91,20 +82,20 @@ const App: React.FC = () => {
     []
   );
 
-  const loadPreviousNews = () => {
+  const loadPreviousHeadlines = () => {
     dispatch({
       type: 'UPDATE_PAGENUMBER',
       payload: {
-        pageNumber: pageNumber - 1
+        headlinesPageNumber: headlinesPageNumber - 1
       }
     });
   };
 
-  const loadNextNews = () => {
+  const loadNextHeadlines = () => {
     dispatch({
-      type: 'UPDATE_PAGESIZE',
+      type: 'UPDATE_PAGENUMBER',
       payload: {
-        pageNumber: pageNumber + 1
+        headlinesPageNumber: headlinesPageNumber + 1
       }
     });
   };
@@ -169,33 +160,40 @@ const App: React.FC = () => {
         </nav>
 
         {!isLoading && !apiError ? (
-          <div className="container-fluid">
-            <div className="container">
-              <div className="row">
-                <section className="col-lg-7 col-md-7 col-sm-12">
-                  <MainNews mainNews={mainNews} totalArticles={totalArticles} />
-                </section>
-                <aside className="col-lg-5 col-md-5 col-sm-12 news__content__sidebar">
-                  <NewsItems
-                    loadPreviousNews={loadPreviousNews}
-                    loadNextNews={loadNextNews}
+          <StateContext.Provider value={{ state, dispatch }}>
+            <div className="container-fluid">
+              <div className="container">
+                <div className="row">
+                  <section className="col-lg-7 col-md-7 col-sm-12">
+                    <MainNews />
+                  </section>
+                  <aside className="col-lg-5 col-md-5 col-sm-12 news__content__sidebar">
+                    {/* <NewsContext.Provider
+                      value={{
+                        loadPreviousHeadlines,
+                        loadNextHeadlines,
+                        pageSize,
+                        headlinesPageNumber,
+                        trendingNewsPageNumber
+                      }}
+                    >
+                      <HeadlinesNews heading="Top Headlines" />
+                      <br />
+                      <br />
+                      <NewsItems
+                    loadPreviousTrendingNews={loadPreviousTrendingNews}
+                    loadNextTrendingNews={loadNextTrendingNews}
                     pageSize={pageSize}
                     pageNumber={pageNumber}
-                    totalArticles={totalArticles}
+                    topHeadLinesArticles={topHeadLinesArticles}
+                    heading={'Trending'}
                   />
-                  <br />
-                  <br />
-                  <NewsItems
-                    loadPreviousNews={loadPreviousNews}
-                    loadNextNews={loadNextNews}
-                    pageSize={pageSize}
-                    pageNumber={pageNumber}
-                    totalArticles={totalArticles}
-                  />
-                </aside>
+                    </NewsContext.Provider> */}
+                  </aside>
+                </div>
               </div>
             </div>
-          </div>
+          </StateContext.Provider>
         ) : null}
       </div>
     </div>
